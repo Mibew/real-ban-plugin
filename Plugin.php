@@ -23,6 +23,7 @@
 
 namespace Mibew\Mibew\Plugin\RealBan;
 
+use Mibew\Ban;
 use Mibew\EventDispatcher\EventDispatcher;
 use Mibew\EventDispatcher\Events;
 use Mibew\Plugin\AbstractPlugin;
@@ -53,6 +54,7 @@ class Plugin extends AbstractPlugin implements PluginInterface
     {
         $dispatcher = EventDispatcher::getInstance();
         $dispatcher->attachListener(Events::USERS_UPDATE_THREADS_ALTER, $this, 'alterThreads');
+        $dispatcher->attachListener(Events::USERS_UPDATE_VISITORS_ALTER, $this, 'alterVisitors');
     }
 
     /**
@@ -84,5 +86,26 @@ class Plugin extends AbstractPlugin implements PluginInterface
         }
 
         $args['threads'] = $threads;
+    }
+
+    /**
+     * A handler for
+     * {@link \Mibew\EventDispatcher\Events::USERS_UPDATE_VISITORS_ALTER} event.
+     *
+     * @param array $args Event arguments.
+     */
+    public function alterVisitors(&$args)
+    {
+        $visitors = array();
+        foreach ($args['visitors'] as $visitor) {
+            $ban = Ban::loadByAddress($visitor['userIp']);
+            if ($ban && !$ban->isExpired()) {
+                // Skip banned visitors
+                continue;
+            }
+            $visitors[] = $visitor;
+        }
+
+        $args['visitors'] = $visitors;
     }
 }

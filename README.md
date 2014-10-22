@@ -1,6 +1,6 @@
 # Mibew Real Ban plugin
 
-It hides banned users from the awaiting page.
+It hides banned threads and visitors on the awaiting page.
 
 
 ## Installation

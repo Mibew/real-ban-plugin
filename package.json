@@ -1,7 +1,7 @@
 {
     "name": "real-ban-plugin",
     "version": "0.1.0",
-    "description": "A plugin for Mibew that hides banned users from the threads list.",
+    "description": "A plugin for Mibew that hides banned threads and visitors on the awaiting page.",
     "private": true,
     "bugs": {
         "url": "https://github.com/mibew/real-ban-plugin/issues"
