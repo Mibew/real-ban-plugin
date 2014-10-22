@@ -74,17 +74,15 @@ class Plugin extends AbstractPlugin implements PluginInterface
      */
     public function alterThreads(&$args)
     {
-        $modified = false;
-        foreach ($args['threads'] as $key => $thread) {
+        $threads = array();
+        foreach ($args['threads'] as $thread) {
             if ($thread['ban']) {
-                unset($args['threads'][$key]);
-                $modified = true;
+                // Skip banned threads
+                continue;
             }
+            $threads[] = $thread;
         }
 
-        if ($modified) {
-            // Keep keys of the array serial.
-            $args['threads'] = array_values($args['threads']);
-        }
+        $args['threads'] = $threads;
     }
 }
