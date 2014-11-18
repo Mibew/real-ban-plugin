@@ -108,4 +108,14 @@ class Plugin extends AbstractPlugin implements PluginInterface
 
         $args['visitors'] = $visitors;
     }
+
+    /**
+     * Specify version of the plugin.
+     *
+     * @return string Plugin's version.
+     */
+    public static function getVersion()
+    {
+        return '0.1.0';
+    }
 }
