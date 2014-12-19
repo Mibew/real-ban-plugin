@@ -116,6 +116,6 @@ class Plugin extends AbstractPlugin implements PluginInterface
      */
     public static function getVersion()
     {
-        return '0.1.0';
+        return '1.0.0';
     }
 }
