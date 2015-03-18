@@ -5,7 +5,7 @@ It hides banned threads and visitors on the awaiting page.
 
 ## Installation
 
-1. Get the archive with the plugin sources. At the moment the only option is to build the plugin from sources.
+1. Get the archive with the plugin sources. You can download it from the [official site](https://mibew.org/plugins#mibew-real-ban) or build the plugin from sources.
 2. Untar/unzip the plugin's archive.
 3. Put files of the plugins to the `<Mibew root>/plugins`  folder.
 4. Navigate to "`<Mibew Base URL>`/operator/plugin" page and enable the plugin.
