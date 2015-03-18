@@ -29,6 +29,7 @@ use Mibew\EventDispatcher\Events;
 use Mibew\Plugin\AbstractPlugin;
 use Mibew\Plugin\PluginInterface;
 use Mibew\Settings;
+use Mibew\Thread;
 
 /**
  * The main plugin's file definition.
@@ -61,6 +62,7 @@ class Plugin extends AbstractPlugin implements PluginInterface
         $dispatcher = EventDispatcher::getInstance();
         $dispatcher->attachListener(Events::USERS_UPDATE_THREADS_ALTER, $this, 'alterThreads');
         $dispatcher->attachListener(Events::USERS_UPDATE_VISITORS_ALTER, $this, 'alterVisitors');
+        $dispatcher->attachListener(Events::THREAD_UPDATE, $this, 'handleThreadUpdate');
     }
 
     /**
@@ -113,6 +115,34 @@ class Plugin extends AbstractPlugin implements PluginInterface
         }
 
         $args['visitors'] = $visitors;
+    }
+
+    /**
+     * A handler for {@link \Mibew\EventDispatcher\Events::THREAD_UPDATE} event.
+     *
+     * When the thread is added to the awaiting queue the method sends
+     * notification about ban if it's needed.
+     *
+     * @param array $args Event arguments.
+     */
+    public function handleThreadUpdate($args)
+    {
+        $thread = $args['thread'];
+        $orig_thread = $args['original_thread'];
+
+        if ($thread->state != $orig_thread->state && $thread->state == Thread::STATE_QUEUE) {
+            // State is change and the thread is in the awaiting queue now.
+            $ban = Ban::loadByAddress($thread->remote);
+            if ($ban && !$ban->isExpired()) {
+                // Operators could not see the user, because he is banned. A
+                // notification should be sent to let user know that he is
+                // banned.
+                $thread->postMessage(
+                    Thread::KIND_INFO,
+                    getlocal('Sorry, but your IP address is banned by some reasons. Try to use another way to contact the support.')
+                );
+            }
+        }
     }
 
     /**
