@@ -28,6 +28,7 @@ use Mibew\EventDispatcher\EventDispatcher;
 use Mibew\EventDispatcher\Events;
 use Mibew\Plugin\AbstractPlugin;
 use Mibew\Plugin\PluginInterface;
+use Mibew\Settings;
 
 /**
  * The main plugin's file definition.
@@ -52,6 +53,11 @@ class Plugin extends AbstractPlugin implements PluginInterface
      */
     public function run()
     {
+        if (!Settings::get('enableban')) {
+            // Bans are disabled. The plugin should do nothing in this case.
+            return;
+        }
+
         $dispatcher = EventDispatcher::getInstance();
         $dispatcher->attachListener(Events::USERS_UPDATE_THREADS_ALTER, $this, 'alterThreads');
         $dispatcher->attachListener(Events::USERS_UPDATE_VISITORS_ALTER, $this, 'alterVisitors');
